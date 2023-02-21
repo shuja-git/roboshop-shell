@@ -8,6 +8,8 @@ echo -e"\e[1;35m Extracting frontend\e[0m"
 cd /usr/share/nginx/html
 unzip /tmp/frontend.zip
 echo -e "\e[1;35m Copying into roboshop conf\e[0m"
+pwd
+ls -l
 cp configs/nginx-roboshop.conf /etc/nginx/default.d/roboshop.conf
 echo -e "\e[1;35m Enabling Nginx\e[0m"
 systemctl enable nginx
