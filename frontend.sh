@@ -1,4 +1,4 @@
-echo "\e[35;1mInstalling Nginx\e[0m"
+echo "\e[1;35mInstalling Nginx\e[0m"
 yum install nginx -y
 echo "\e[35;1mRemoving Old Contents\e[0m"
 rm -rf /usr/share/nginx/html/*
