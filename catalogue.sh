@@ -13,7 +13,9 @@ useradd roboshop
 fi
 status_check $?
 print_head "Create application directory"
+if [ ! -d /app ]; then
 mkdir /app
+fi
 status_check $?
 print_head "Delete Old contents"
 rm -rf /app/* &>>${log_file}
