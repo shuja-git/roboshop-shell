@@ -2,7 +2,7 @@ source common.sh
 
 print_head "Setup mongodb repos" &>>${log_file}
 cp configs/mongo.repo /etc/yum.repos.d/mongo.repo
-if [ $? -q 0 ]; then
+if [ "$?" -q 0 ]; then
     echo -e "\e[33m Success\e[0m"
 fi
 print_head "Install Mongodb" &>>${log_file}
