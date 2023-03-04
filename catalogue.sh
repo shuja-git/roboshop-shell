@@ -27,7 +27,7 @@ print_head "Installing Nodejs dependencies"
 npm install &>>${log_file}
 echo $?
 print_head "Copy systemd Service file"
-cp configs/catalogue.service /etc/systemd/system/catalogue.service
+cp ${code_dir}/configs/catalogue.service /etc/systemd/system/catalogue.service
 echo $?
 print_head "Reload SystemD"
 systemctl daemon-reload &>>${log_file}
@@ -39,10 +39,10 @@ print_head "Restart Catalogue service"
 systemctl restart catalogue &>>${log_file}
 echo $?
 print_head "Copy mongodb repo file"
-cp configs/mongo.repo /etc/yum.repos.d/mongo.repo
+cp ${code_dir}/configs/mongo.repo /etc/yum.repos.d/mongo.repo
 echo $?
 print_head "Installing mongo client"
-yum install mongodb-org-shell -y &>>${log_file}
+yum install mongodb-org-shell -y &>>"${log_file}"
 echo $?
 print_head "Load Schema"
 mongo --host mongodb.shujadevops.online </app/schema/catalogue.js &>>${log_file}
