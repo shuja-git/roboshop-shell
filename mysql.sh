@@ -7,23 +7,26 @@ if [ -z "${mysql_root_password}" ]; then
 fi
 
 print_head "Disable mysql 8"
-dnf module disable mysql -y
+dnf module disable mysql -y &>>${log_file}
 status_check $?
 
+print_head "copy mysql repo file"
+cp ${code_dir}/configs/mysql.repo /etc/yum.repos.d/mysql.repo &>>${log_file}
+
 print_head "Install mysql 5.7"
-yum install mysql-community-server -y
+yum install mysql-community-server -y &>>${log_file}
 status_check $?
 
 print_head "Enable mysql"
-systemctl enable mysqld
+systemctl enable mysqld &>>${log_file}
 status_check $?
 
 print_head "start mysql"
-systemctl start mysqld
+systemctl start mysqld &>>${log_file}
 status_check $?
 
-print_head "Set mysql default password "
-mysql_secure_installation --set-root-pass ${mysql_root_password}
+print_head "Set root password "
+mysql_secure_installation --set-root-pass ${mysql_root_password} &>>${log_file}
 status_check $?
 #RoboShop@1
 
