@@ -10,6 +10,7 @@ status_check(){
       echo -e "\e[33mSuccess\e[0m"
   else
     echo -e "\e[33mFailure\e[0m"
+    echo -e "\e[31msee file ${log_file} for more information on error"
     exit 1
   fi
 }
