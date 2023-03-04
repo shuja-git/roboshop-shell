@@ -14,6 +14,20 @@ status_check(){
     exit 1
   fi
 }
+schema_setup(){
+  if [ "${schema_type}" == "mongo" ]; then
+        print_head "Copy mongodb repo file"
+        cp ${code_dir}/configs/mongo.repo /etc/yum.repos.d/mongo.repo
+        status_check $?
+        print_head "Installing mongo client"
+        yum install mongodb-org-shell -y &>>"${log_file}"
+        status_check $?
+        print_head "Load Schema"
+        mongo --host mongodb-dev.shujadevops.online </app/schema/${component}.js &>>${log_file}
+        status_check $?
+  fi
+
+}
 
 Nodejs(){
   print_head "Configure Nodejs Repo"
@@ -59,14 +73,6 @@ Nodejs(){
   print_head "Restart ${component} service"
   systemctl restart ${component} &>>${log_file}
   status_check $?
-  print_head "Copy mongodb repo file"
-  cp ${code_dir}/configs/mongo.repo /etc/yum.repos.d/mongo.repo
-  status_check $?
-  print_head "Installing mongo client"
-  yum install mongodb-org-shell -y &>>"${log_file}"
-  status_check $?
-  print_head "Load Schema"
-  mongo --host mongodb-dev.shujadevops.online </app/schema/${component}.js &>>${log_file}
-  status_check $?
 
+  schema_setup
 }
