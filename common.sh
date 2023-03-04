@@ -48,7 +48,7 @@ Nodejs(){
   npm install &>>${log_file}
   status_check $?
   print_head "Copy systemd Service file"
-  cp ${code_dir}/configs/${component}.service /etc/systemd/system/${component}.service
+  cp ${code_dir}/configs/${component}.service /etc/systemd/system/${component}.service &>>${log_file}
   status_check $?
   print_head "Reload SystemD"
   systemctl daemon-reload &>>${log_file}
