@@ -7,19 +7,19 @@ if [ "$?" -q 0 ]; then
 fi
 print_head "Install Mongodb" &>>${log_file}
 yum install mongodb-org -y
-if [ $? -q 0 ]; then
+if [ "$?" -q 0 ]; then
     echo -e "\e[33m Success\e[0m"
 fi
 
 print_head "Enable mongodb" &>>${log_file}
 systemctl enable mongod
-if [ $? -q 0 ]; then
+if [ "$?" -q 0 ]; then
     echo -e "\e[33m Success\e[0m"
 fi
 
 print_head "Start mongodb" &>>${log_file}
 systemctl start mongod
-if [ $? -q 0 ]; then
+if [ "$?" -q 0 ]; then
     echo -e "\e[33m Success\e[0m"
 fi
 
