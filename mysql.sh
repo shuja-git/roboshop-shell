@@ -12,6 +12,7 @@ status_check $?
 
 print_head "copy mysql repo file"
 cp ${code_dir}/configs/mysql.repo /etc/yum.repos.d/mysql.repo &>>${log_file}
+status_check $?
 
 print_head "Install mysql 5.7"
 yum install mysql-community-server -y &>>${log_file}
@@ -26,7 +27,12 @@ systemctl start mysqld &>>${log_file}
 status_check $?
 
 print_head "Set root password "
-mysql_secure_installation --set-root-pass ${mysql_root_password} &>>${log_file}
+ echo show databases | mysql -uroot -p${mysql_root_password} &>>${log_file}
+ if [ $? -ne ]; then
+   mysql_secure_installation --set-root-pass ${mysql_root_password} &>>${log_file}
+ fi
+
+
 status_check $?
 #RoboShop@1
 
