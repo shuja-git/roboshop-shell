@@ -140,7 +140,9 @@ go(){
 
   print_head "Download Dependencies"
   go mod init dispatch &>>${log_file}
+  status_check $?
   go get &>>${log_file}
+  status_check $?
   go build &>>${log_file}
   status_check $?
 
