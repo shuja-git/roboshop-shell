@@ -1,6 +1,9 @@
 source common.sh
 
 roboshop_app_password=$1
+if [ -z "${roboshop_app_password}" ]; then
+  echo -e "\e[31mRabbitMQ App User password is missing\e[0m"
+fi
 print_head "setup Earlang Repo"
 curl -s https://packagecloud.io/install/repositories/rabbitmq/erlang/script.rpm.sh |  bash &>>"${log_file}"
 status_check $?
