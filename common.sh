@@ -25,7 +25,53 @@ schema_setup(){
         print_head "Load Schema"
         mongo --host mongodb-dev.shujadevops.online </app/schema/${component}.js &>>${log_file}
         status_check $?
+  elif [ "${schema_type}" == "mysql" ]; then
+       print_head "Install mysql client"
+       yum install mysql -y &>>"${log_file}"
+       status_check $?
+       print_head "Load schema"
+       mysql -h mysql-dev.shujadevops.online -uroot -p${mysql_root_password} < /app/schema/shipping.sql &>>"${log_file}"
+       status_check $?
   fi
+
+}
+app_prereq_setup(){
+  print_head "Create Roboshop user"
+    id roboshop &>>${log_file}
+    if [ "$?" -ne 0 ]; then
+    useradd roboshop
+    fi
+    status_check $?
+    print_head "Create application directory"
+    if [ ! -d /app ]; then
+    mkdir /app
+    fi
+    status_check $?
+    print_head "Delete Old contents"
+    rm -rf /app/* &>>${log_file}
+    status_check $?
+    print_head "Downloading app contents"
+    curl -L -o /tmp/${component}.zip https://roboshop-artifacts.s3.amazonaws.com/${component}.zip &>>${log_file}
+    status_check $?
+    cd /app
+
+    print_head "Extracting app contents"
+    unzip /tmp/${component}.zip &>>${log_file}
+    status_check $?
+}
+systemd_setup(){
+   print_head "Copy systemd Service file"
+    cp ${code_dir}/configs/${component}.service /etc/systemd/system/${component}.service &>>${log_file}
+    status_check $?
+    print_head "Reload SystemD"
+    systemctl daemon-reload &>>${log_file}
+    status_check $?
+    print_head "Enable ${component} service "
+    systemctl enable ${component} &>>${log_file}
+    status_check $?
+    print_head "Restart ${component} service"
+    systemctl restart ${component} &>>${log_file}
+    status_check $?
 
 }
 
@@ -36,43 +82,37 @@ Nodejs(){
   print_head "Install Nodejs"
   yum install nodejs -y &>>${log_file}
   status_check $?
-  print_head "Create Roboshop user"
-  id roboshop &>>${log_file}
-  if [ "$?" -ne 0 ]; then
-  useradd roboshop
-  fi
-  status_check $?
-  print_head "Create application directory"
-  if [ ! -d /app ]; then
-  mkdir /app
-  fi
-  status_check $?
-  print_head "Delete Old contents"
-  rm -rf /app/* &>>${log_file}
-  status_check $?
-  print_head "Downloading app contents"
-  curl -L -o /tmp/${component}.zip https://roboshop-artifacts.s3.amazonaws.com/${component}.zip &>>${log_file}
-  status_check $?
-  cd /app
 
-  print_head "Extracting app contents"
-  unzip /tmp/${component}.zip &>>${log_file}
-  status_check $?
+  app_prereq_setup
+
   print_head "Installing Nodejs dependencies"
   npm install &>>${log_file}
   status_check $?
-  print_head "Copy systemd Service file"
-  cp ${code_dir}/configs/${component}.service /etc/systemd/system/${component}.service &>>${log_file}
-  status_check $?
-  print_head "Reload SystemD"
-  systemctl daemon-reload &>>${log_file}
-  status_check $?
-  print_head "Enable ${component} service "
-  systemctl enable ${component} &>>${log_file}
-  status_check $?
-  print_head "Restart ${component} service"
-  systemctl restart ${component} &>>${log_file}
-  status_check $?
+
 
   schema_setup
+  systemd_setup
+
+}
+
+java(){
+  print_head "Install Maven"
+  yum install maven -y &>>${log_file}
+  status_check $?
+
+  app_prereq_setup
+
+  print_head "Download dependencies & package"
+  mvn clean package &>>${log_file}
+  mv target/${component}-1.0.jar ${component}.jar &>>${log_file}
+   status_check $?
+
+# schema setup function
+  schema_setup
+
+ #Systemd function
+ systemd_setup
+
+
+
 }
