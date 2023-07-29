@@ -1,9 +1,9 @@
 #!/bin/bash
 
 ##### Change these values ###
-ZONE_ID="ami-03265a0778a880afb"
+ZONE_ID="ami-0f34c5ae932e6f0e4"
 DOMAIN="shujadevops.online"
-SG_NAME="Allow-all-sg"
+SG_NAME="New-allow-all-sg"
 #############################
 
 
