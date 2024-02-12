@@ -1,9 +1,9 @@
 #!/bin/bash
 
 ##### Change these values ###
-ZONE_ID="Z10218511FGAD8YC6L1HI"
-DOMAIN="shujadevops.online"
-SG_NAME="New-allow-all-sg"
+ZONE_ID="Z10377495CKDE7OXJB1E"
+DOMAIN="shujathdevops.online"
+SG_NAME="allow-all"
 #############################
 
 
